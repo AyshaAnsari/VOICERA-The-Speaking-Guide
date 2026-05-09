@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voicera: Module Reader</title>
+   
+    <link rel="stylesheet" href="style.css">
+    <!-- Include the module data -->
+    <script src="modulesData.js"></script>
+</head>
+<body>
+ 
+<nav class="navbar">
+    <div class="logo">VOICERA</div>
+    
+    <ul class="nav-links">
+        <li><a href="journey.html">← Back to Journey</a></li>
+    </ul>
+</nav>
+
+<section class="profile-section module-reader-section">
+    <div class="profile-container module-container" style="max-width: 900px; padding: 60px 50px;">
+        
+        <div id="moduleContent" class="module-content-wrapper">
+            <!-- Content will be injected here by JS -->
+            <h2 style="text-align: center; color: white;">Loading Module...</h2>
+        </div>
+
+        <div class="chapter-navigation" style="display: flex; justify-content: center; margin-top: 50px;">
+            <button id="completeBtn" class="start-journey-btn" style="border: none;">Complete Module</button>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Parse URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const moduleId = urlParams.get('id');
+        
+        const contentDiv = document.getElementById('moduleContent');
+
+        if (!moduleId || !modulesData[moduleId]) {
+            contentDiv.innerHTML = `
+                <h2 style="text-align: center; color: #ff4d4d;">Module Not Found</h2>
+                <p style="text-align: center; color: white;">The requested module does not exist or is locked.</p>
+            `;
+            return;
+        }
+
+        const data = modulesData[moduleId];
+        
+        // Generate HTML
+        let html = `
+            <div class="module-header fade-in-item">
+                <p class="chapter-subtitle">${data.chapterTitle}</p>
+                <h2 class="module-main-title">${data.moduleTitle}</h2>
+            </div>
+            <div class="module-body">
+        `;
+
+        data.content.forEach((item, index) => {
+            // Calculate a slight delay for staggered fade-in
+            const delay = (index + 1) * 0.15;
+            
+            if (item.type === 'paragraph') {
+                html += `<p class="module-text fade-in-item" style="animation-delay: ${delay}s">${item.text}</p>`;
+            } else if (item.type === 'list') {
+                html += `<ul class="module-list fade-in-item" style="animation-delay: ${delay}s">`;
+                item.items.forEach(listItem => {
+                    html += `<li>${listItem}</li>`;
+                });
+                html += `</ul>`;
+            }
+        });
+
+        html += `</div>`;
+        contentDiv.innerHTML = html;
+
+        document.getElementById('completeBtn').addEventListener('click', () => {
+            let completed = JSON.parse(localStorage.getItem('voiceraCompletedModules') || '[]');
+            if (!completed.includes(moduleId)) {
+                completed.push(moduleId);
+                localStorage.setItem('voiceraCompletedModules', JSON.stringify(completed));
+            }
+            window.location.href = 'journey.html';
+        });
+    });
+</script>
+
+</body>
+</html>
