@@ -622,6 +622,10 @@ body::before {
         justify-content: center;
         gap: 10px;
     }
+
+    .hero-section, .form-section, .profile-section {
+        padding-top: 140px; /* More space for the wrapping navbar */
+    }
     
     .logo {
         font-size: 24px;
@@ -641,25 +645,35 @@ body::before {
         padding: 5px 12px;
     }
 
-    /* Slider & Cards - maintain proportions */
+    /* Slider & Cards - ensure full visibility */
     .slider {
-        width: 95vw;
+        width: 100vw;
         height: auto;
-        min-height: 400px;
+        min-height: 500px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .slides {
+        gap: 0; /* No gap needed when using 100vw total width per card */
     }
 
     .card {
-        min-width: 95vw;
-        width: 95vw;
-        padding: 25px 15px;
+        min-width: 90vw;
+        width: 90vw;
+        height: auto;
+        padding: 40px 25px;
+        margin: 0 5vw; /* Each card + margins = 100vw */
     }
 
     .card h1 {
-        font-size: 22px;
+        font-size: 26px;
+        margin-bottom: 15px;
     }
 
     .card p {
-        font-size: 14px;
+        font-size: 16px;
+        margin-bottom: 25px;
     }
 
     .start-journey-btn {

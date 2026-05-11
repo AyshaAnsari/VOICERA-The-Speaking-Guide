@@ -6,7 +6,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setInterval(() => {
         currentIndex = (currentIndex + 1) % totalCards;
-        // Each card is 600px wide + 50px gap = 650px total movement per slide
-        slides.style.transform = `translateX(-${currentIndex * 650}px)`;
+        
+        // Dynamic calculation: Card width + margins + gap
+        const firstCard = cards[0];
+        const cardWidth = firstCard.offsetWidth;
+        
+        const cardStyle = window.getComputedStyle(firstCard);
+        const marginLeft = parseInt(cardStyle.marginLeft) || 0;
+        const marginRight = parseInt(cardStyle.marginRight) || 0;
+        
+        const slidesStyle = window.getComputedStyle(slides);
+        const gap = parseInt(slidesStyle.gap) || 0;
+        
+        const totalStep = cardWidth + marginLeft + marginRight + gap;
+        const totalMovement = totalStep * currentIndex;
+        
+        slides.style.transform = `translateX(-${totalMovement}px)`;
     }, 2000);
 });
