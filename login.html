@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voicera: Login</title>
+    <meta name="description" content="Login to your Voicera account and continue your speaking journey.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="logo">VOICERA</div>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="journey.html">Journey</a></li>
+        <li><a href="login.html" class="signup-btn">Login</a></li>
+        <li><a href="signup.html">Sign Up</a></li>
+        <li><a href="profile.html">Profile</a></li>
+    </ul>
+</nav>
+
+<section class="profile-section">
+    <div class="profile-container" style="max-width: 520px; padding: 60px 50px;">
+
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="font-size: 36px; color: white; margin-bottom: 10px;">Welcome Back</h1>
+            <p style="color: rgba(255,255,255,0.5); font-size: 16px;">Login to continue your speaking journey</p>
+        </div>
+
+        <div id="loginError" style="display:none; background: rgba(255,77,77,0.15); border: 1px solid rgba(255,77,77,0.4); color: #ff4d4d; padding: 14px 20px; border-radius: 12px; margin-bottom: 24px; font-size: 15px; text-align: center;"></div>
+
+        <form id="loginForm" class="signup-form">
+
+            <div class="form-group">
+                <label for="loginName">Full Name</label>
+                <input type="text" id="loginName" placeholder="Enter your name" required />
+            </div>
+
+            <div class="form-group">
+                <label for="loginEmail">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email" required />
+            </div>
+
+            <div class="form-group" style="position: relative;">
+                <label for="loginPassword">Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" required />
+                <span id="togglePassword" onclick="togglePwd()" style="position:absolute; right:18px; bottom:14px; cursor:pointer; font-size:18px; color:rgba(255,255,255,0.4); user-select:none;">👁</span>
+            </div>
+
+            <button type="submit" class="start-journey-btn" style="width:100%; border:none; padding:16px; font-size:17px; margin-top:10px; cursor:pointer; border-radius: 40px;">
+                Login
+            </button>
+
+        </form>
+
+        <p style="text-align:center; color:rgba(255,255,255,0.4); margin-top:30px; font-size:15px;">
+            Don't have an account? <a href="signup.html" style="color:#c084fc; text-decoration:none; font-weight:600;">Sign Up</a>
+        </p>
+
+    </div>
+</section>
+
+<script>
+    function togglePwd() {
+        const input = document.getElementById('loginPassword');
+        const icon  = document.getElementById('togglePassword');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁';
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const name     = document.getElementById('loginName').value.trim();
+        const email    = document.getElementById('loginEmail').value.trim().toLowerCase();
+        const password = document.getElementById('loginPassword').value;
+        const errorDiv = document.getElementById('loginError');
+
+        // Retrieve saved profile from localStorage
+        const savedName  = localStorage.getItem('voiceraName')  || '';
+        const savedEmail = localStorage.getItem('voiceraEmail') || '';
+        const savedPass  = localStorage.getItem('voiceraPassword') || '';
+
+        const nameMatch  = name.toLowerCase()  === savedName.toLowerCase();
+        const emailMatch = email               === savedEmail.toLowerCase();
+        const passMatch  = password            === savedPass;
+
+        if (!savedEmail) {
+            errorDiv.textContent = 'No account found. Please sign up first.';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        if (nameMatch && emailMatch && passMatch) {
+            errorDiv.style.display = 'none';
+            // Mark as logged in and redirect to profile
+            localStorage.setItem('voiceraLoggedIn', 'true');
+            window.location.href = 'profile.html';
+        } else {
+            errorDiv.textContent = 'Incorrect name, email, or password. Please try again.';
+            errorDiv.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+</html>
