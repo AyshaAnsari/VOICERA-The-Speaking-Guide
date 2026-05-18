@@ -22,5 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
         const totalMovement = totalStep * currentIndex;
         
         slides.style.transform = `translateX(-${totalMovement}px)`;
-    }, 2000);
+    }, 5000);
 });
