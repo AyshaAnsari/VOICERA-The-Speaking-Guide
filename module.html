@@ -20,7 +20,7 @@
 </nav>
 
 <section class="profile-section module-reader-section">
-    <div class="profile-container module-container" style="max-width: 900px; padding: 60px 50px;">
+    <div class="profile-container module-container" style="max-width: 900px; box-sizing: border-box;">
         
         <div id="moduleContent" class="module-content-wrapper">
             <!-- Content will be injected here by JS -->
@@ -78,15 +78,66 @@
         html += `</div>`;
         contentDiv.innerHTML = html;
 
+        // --- AUTO-INJECT UPLOAD WIDGETS FOR MODULE 2 & 3 ---
+        const moduleNum = parseInt(moduleId.charAt(3)); // gets 1, 2, or 3
+
+        const uploadConfigs = {
+            2: [
+                { id: 'upload_audio_activity', label: '🎙️ Upload Your Audio Activity Recording', hint: 'Upload an audio file of your completed audio activity (MP3, WAV, M4A).' }
+            ],
+            3: [
+                { id: 'upload_submission_1', label: '🎙️ Upload Submission 1', hint: 'Upload your first audio recording (MP3, WAV, M4A).' },
+                { id: 'upload_submission_2', label: '🎙️ Upload Submission 2', hint: 'Upload your second audio recording (MP3, WAV, M4A).' }
+            ]
+        };
+
+        if (uploadConfigs[moduleNum]) {
+            const uploadSection = document.createElement('div');
+            uploadSection.className = 'upload-section fade-in-item';
+            uploadSection.style.animationDelay = '1s';
+
+            let uploadsHTML = `<h3 class="upload-section-title">📂 Audio Submissions</h3>`;
+
+            uploadConfigs[moduleNum].forEach(cfg => {
+                uploadsHTML += `
+                    <div class="upload-card" id="card_${cfg.id}">
+                        <p class="upload-label">${cfg.label}</p>
+                        <p class="upload-hint">${cfg.hint}</p>
+                        <label class="upload-btn-label" for="${cfg.id}">
+                            Choose Audio File
+                        </label>
+                        <input type="file" id="${cfg.id}" accept="audio/*" style="display:none;" onchange="handleFileUpload(this, 'card_${cfg.id}')">
+                        <p class="upload-status" id="status_${cfg.id}">No file selected</p>
+                    </div>
+                `;
+            });
+
+            uploadSection.innerHTML = uploadsHTML;
+            contentDiv.appendChild(uploadSection);
+        }
+
         document.getElementById('completeBtn').addEventListener('click', () => {
             let completed = JSON.parse(localStorage.getItem('voiceraCompletedModules') || '[]');
             if (!completed.includes(moduleId)) {
                 completed.push(moduleId);
                 localStorage.setItem('voiceraCompletedModules', JSON.stringify(completed));
             }
-            window.location.href = 'journey.html';
+            // Derive which chapter this module belongs to (c1m1->0, c2m1->1, etc.)
+            const chapterIndex = parseInt(moduleId.charAt(1)) - 1;
+            window.location.href = `journey.html?chapter=${chapterIndex}`;
         });
     });
+
+    function handleFileUpload(input, cardId) {
+        const card = document.getElementById(cardId);
+        const statusEl = card.querySelector('.upload-status');
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            statusEl.innerHTML = `✅ <strong>${file.name}</strong> selected (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+            statusEl.style.color = '#4ade80';
+            card.classList.add('upload-card--done');
+        }
+    }
 </script>
 
 </body>

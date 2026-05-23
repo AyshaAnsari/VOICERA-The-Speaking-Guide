@@ -442,6 +442,14 @@ body::before {
     box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
 }
 
+.chapter-navigation {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 30px;
+    margin-top: 20px;
+}
+
 /* JOURNEY CHAPTER STYLES */
 .chapters-slider {
     overflow: hidden;
@@ -634,9 +642,8 @@ body::before {
 @media screen and (max-width: 800px) {
     .navbar {
         padding: 15px 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
+        flex-direction: column;
+        gap: 15px;
     }
 
     .hero-section, .form-section, .profile-section {
@@ -650,7 +657,19 @@ body::before {
     }
 
     .nav-links {
-        gap: 12px;
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        padding-bottom: 5px;
+        gap: 15px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Hide scrollbar for nav links on mobile */
+    .nav-links::-webkit-scrollbar {
+        display: none;
     }
 
     .nav-links a {
@@ -666,7 +685,7 @@ body::before {
         width: 100%;
         height: auto;
         min-height: 500px;
-        display: flex;
+        display: block;
         overflow: hidden;
     }
 
@@ -675,11 +694,11 @@ body::before {
     }
 
     .card {
-        min-width: 90%;
-        width: 90%;
+        min-width: 100%;
+        width: 100%;
         height: auto;
-        padding: 40px 25px;
-        margin: 0 5%; /* Each card + margins = 100% */
+        padding: 40px 20px;
+        margin: 0; /* Removing margins for a perfect fit */
         box-sizing: border-box;
     }
 
@@ -732,6 +751,20 @@ body::before {
 
     .chapter-card-desc {
         font-size: 14px;
+    }
+
+    /* Chapter Navigation (Journey Page) */
+    .chapter-navigation {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .chapter-navigation .start-journey-btn {
+        order: -1; /* Make start button appear first on mobile */
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
     }
 }
 
